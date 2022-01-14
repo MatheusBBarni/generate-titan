@@ -22,7 +22,11 @@ class FileService {
     }
   }
 
-  async createFile(path: string, fileName: string, content: string | Buffer | Uint8Array): Promise<boolean> {
+  async createFile(
+    path: string,
+    fileName: string,
+    content: string | Buffer | Uint8Array
+  ): Promise<boolean> {
     try {
       await outputFile(`${path}/${fileName}`, content)
       return true
