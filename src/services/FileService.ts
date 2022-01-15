@@ -1,4 +1,4 @@
-import { readJson, ensureDir, outputFile } from 'fs-extra'
+import { readJson, ensureDir, outputFile, readFile } from 'fs-extra'
 
 class FileService {
   async readJson<T>(path: string, fileName: string): Promise<[T, boolean]> {
@@ -6,9 +6,20 @@ class FileService {
       const result = await readJson(`${path}/${fileName}.json`)
 
       return [result as T, true]
+    } catch {
+      return [{} as T, false]
+    }
+  }
+
+  async readFile(path: string, fileName: string): Promise<[string, boolean]> {
+    try {
+      const result = await readFile(`${path}/${fileName}`)
+
+      return [result.toString(), true]
     } catch (error) {
       console.log(error)
-      return [{} as T, false]
+
+      return ['', false]
     }
   }
 
@@ -16,8 +27,7 @@ class FileService {
     try {
       await ensureDir(`${path}/${dirName}`)
       return [dirName, true]
-    } catch (error) {
-      console.log(error)
+    } catch {
       return [dirName, false]
     }
   }
@@ -30,8 +40,7 @@ class FileService {
     try {
       await outputFile(`${path}/${fileName}`, content)
       return true
-    } catch (error) {
-      console.error(error)
+    } catch {
       return false
     }
   }

@@ -1,2 +1,5 @@
 node_modules
 bin
+dist
+yarn-error.log
+gtitan.json
