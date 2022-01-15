@@ -90,6 +90,7 @@ async function main(): Promise<void> {
     if (!createdFile) {
       console.log(colors.red("Couldn't create the Nextjs Page."))
       console.log(colors.red('Check if the CLI have the right permissions!'))
+      return
     }
 
     console.log(colors.green('Created the Nextjs Page.'))
