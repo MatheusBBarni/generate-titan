@@ -10,7 +10,7 @@
   "scripts": {
     "build": "yarn clean && tsc -b && yarn copy-templates",
     "start": "ts-node ./src/index.ts",
-    "clean": "rm -rf bin",
+    "clean": "rm -rf bin gentitan.json",
     "copy-templates": "cp -r ./src/templates ./bin",
     "lint": "eslint . --ext .ts"
   },
@@ -39,7 +39,7 @@
     "gentitan": "bin/index.js"
   },
   "keywords": [
-    "Typescript",
+    "Template",
     "generator",
     "Front-end",
     "React",

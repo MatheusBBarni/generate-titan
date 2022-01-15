@@ -2,4 +2,6 @@ node_modules
 bin
 dist
 yarn-error.log
-gtitan.json
+gentitan.json
+src/Teste
+*/**.tsx

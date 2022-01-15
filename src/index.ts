@@ -2,34 +2,31 @@
 
 import colors from 'colors'
 import prompts from 'prompts'
-import Mustache from 'mustache'
 
 import FileService from './services/FileService'
-import baseConfigFile from './config/baseConfigFile'
+import TemplateService from './services/TemplateService'
 import { BaseConfigFile, TemplateType } from './models'
-import { CONFIG_FILE_NAME, NEXTJS_PAGE_FILE_NAME } from './config/constants'
+import { CONFIG_FILE_NAME } from './config/constants'
 
 async function main(): Promise<void> {
-  const [content, readJson] = await FileService.readJson<BaseConfigFile>(
+  const [content, haveConfigFile] = await FileService.readJson<BaseConfigFile>(
     '.',
     CONFIG_FILE_NAME
   )
 
-  if (!readJson) {
+  if (!haveConfigFile) {
     console.log(colors.red('Config file not found!'))
-    console.log(colors.blue('Generating config file.'))
-    await FileService.createFile(
-      '.',
-      `${CONFIG_FILE_NAME}.json`,
-      JSON.stringify(baseConfigFile, undefined, 4)
-    )
+    console.log(colors.blue('Generating config file...'))
+
+    await FileService.generateConfigFile()
+
     console.log(colors.green('Generated gtitan.json!'))
-    console.log(colors.green('Please, rerun the command.'))
+    console.log(colors.green('Please, rerun the command...'))
     return
   }
 
   const { base_path, expect_param, nextjs, typescript } = content
-  const extension = typescript ? 'tsx' : 'jsx'
+  const extension = typescript ? 'ts' : 'js'
 
   const questions: prompts.PromptObject<string>[] = []
 
@@ -67,31 +64,37 @@ async function main(): Promise<void> {
   const name = !response.name ? 'index' : response.name
 
   if (response.type === TemplateType.NEXTJS_PAGE) {
-    const [content, readFile] = await FileService.readFile(
-      `${__dirname}/templates`,
-      NEXTJS_PAGE_FILE_NAME
-    )
+    const createdTemplate = await TemplateService.generateNextjsPage({
+      extension,
+      params: { name },
+      fileName: name,
+      basePath: base_path
+    })
 
-    if (!readFile) {
-      console.log(colors.red("Couldn't read the template."))
-      console.log(colors.red('Check if the CLI have the right permissions!'))
-      return
-    }
-    const output = Mustache.render(content, { name })
-
-    const createdFile = await FileService.createFile(
-      base_path,
-      `${name}.${extension}`,
-      output
-    )
-
-    if (!createdFile) {
+    if (!createdTemplate) {
       console.log(colors.red("Couldn't create the Nextjs Page."))
       console.log(colors.red('Check if the CLI have the right permissions!'))
       return
     }
 
-    console.log(colors.green('Created the Nextjs Page.'))
+    console.log(colors.green('Created Nextjs Page.'))
+  }
+
+  if (response.type === TemplateType.REACT_COMPONENT || !response.type) {
+    const createdTemplate = await TemplateService.generateReactComponent({
+      extension,
+      params: { name },
+      fileName: name,
+      basePath: base_path
+    })
+
+    if (!createdTemplate) {
+      console.log(colors.red("Couldn't create the React component dir."))
+      console.log(colors.red('Check if the CLI have the right permissions!'))
+      return
+    }
+
+    console.log(colors.green('Created React component dir.'))
   }
 }
 

@@ -1,12 +1,16 @@
 import { readJson, ensureDir, outputFile, readFile } from 'fs-extra'
 
+import baseConfigFile from '../config/baseConfigFile'
+import { CONFIG_FILE_NAME } from '../config/constants'
+
 class FileService {
   async readJson<T>(path: string, fileName: string): Promise<[T, boolean]> {
     try {
       const result = await readJson(`${path}/${fileName}.json`)
 
       return [result as T, true]
-    } catch {
+    } catch (error) {
+      console.log(error)
       return [{} as T, false]
     }
   }
@@ -27,7 +31,9 @@ class FileService {
     try {
       await ensureDir(`${path}/${dirName}`)
       return [dirName, true]
-    } catch {
+    } catch (error) {
+      console.log(error)
+
       return [dirName, false]
     }
   }
@@ -40,9 +46,23 @@ class FileService {
     try {
       await outputFile(`${path}/${fileName}`, content)
       return true
-    } catch {
+    } catch (error) {
+      console.log(error)
+
       return false
     }
+  }
+
+  toJson(object: unknown) {
+    return JSON.stringify(object, undefined, 4)
+  }
+
+  async generateConfigFile() {
+    await this.createFile(
+      '.',
+      `${CONFIG_FILE_NAME}.json`,
+      this.toJson(baseConfigFile)
+    )
   }
 }
 

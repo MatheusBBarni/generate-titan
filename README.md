@@ -1,4 +1,4 @@
-# Generate Titan - NOT FINISHED
+# Generate Titan - FINISHED THE "MVP"
 
 ### Description
 
@@ -10,7 +10,7 @@ Should generate files in folders, by now it is focus on creating folders for rea
 - [x] Generate a config file (gentitan.json).
 - [x] Get file name.
 - [x] Create a Nextjs Page.
-- [ ] Create a directory with choosen name and with index.tsx and styles.ts.
+- [x] Create a directory with choosen name and with index.tsx and styles.ts.
 
 ### Ideas
 
