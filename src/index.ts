@@ -4,17 +4,15 @@ import colors from 'colors'
 import prompts from 'prompts'
 import Mustache from 'mustache'
 
+import FileService from './services/FileService'
 import baseConfigFile from './config/baseConfigFile'
 import { BaseConfigFile, TemplateType } from './models'
-import FileService from './services/FileService'
-import { NEXTJS_PAGE_FILE_NAME } from './config/constants'
-
-// JSON.stringify(x, undefined, 4)
+import { CONFIG_FILE_NAME, NEXTJS_PAGE_FILE_NAME } from './config/constants'
 
 async function main(): Promise<void> {
   const [content, readJson] = await FileService.readJson<BaseConfigFile>(
     '.',
-    'gtitan'
+    CONFIG_FILE_NAME
   )
 
   if (!readJson) {
@@ -22,7 +20,7 @@ async function main(): Promise<void> {
     console.log(colors.blue('Generating config file.'))
     await FileService.createFile(
       '.',
-      'gtitan.json',
+      `${CONFIG_FILE_NAME}.json`,
       JSON.stringify(baseConfigFile, undefined, 4)
     )
     console.log(colors.green('Generated gtitan.json!'))

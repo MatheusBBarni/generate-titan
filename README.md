@@ -1,12 +1,29 @@
 # Generate Titan - NOT FINISHED
 
 ### Description
-  Should generate files in folders, by now it is focus on creating folders for react components, It generate (should) a folder with an index.tsx and styles.ts.
 
+Should generate files in folders, by now it is focus on creating folders for react components, It generate (should) a folder with an index.tsx and styles.ts.
 
 ### Checklist
-- [ ] Get path (-p=PATH).
-- [ ] Get dirname (-d=DIR_NAME).
-- [ ] Get file extension (-fe=FILE_EXTENSION).
-- [ ] Create dir with the dirname.
-- [ ] Create files inside the created dir (index.FILE_EXTENSION and styles.FILE_EXTENSION).
+
+- [x] Check if the config file is created.
+- [x] Generate a config file (gentitan.json).
+- [x] Get file name.
+- [x] Create a Nextjs Page.
+- [ ] Create a directory with choosen name and with index.tsx and styles.ts.
+
+### Ideas
+
+- Create a folder inside the working dir with custom templates and add on the config file like this:
+  ```JSON
+  {
+    ...
+    "custom_templates": PATH,
+    "templates": [
+      {
+        "name": "solidjs-component.mustache",
+        "params": ["name", "type"]
+      }
+    ]
+  }
+  ```
